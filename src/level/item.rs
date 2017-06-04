@@ -101,19 +101,3 @@ impl fmt::Display for Item {
 impl Default for Item {
     fn default() -> Item { Item::empty() }
 }
-
-#[cfg(test)]
-mod test {
-    use super::*;
-
-    #[test] #[ignore]
-    fn display() {
-        println!();
-        println!("{}", Item::new(b' ', Color::Blue));
-        println!("{}", Item::new(b'+', Color::Blue));
-        println!("{}", Item::new(b'3', Color::Yellow));
-        println!("{}", Item::new(b'E', Color::Blue));
-        println!("{}", Item::new(b'e', Color::Green));
-        panic!()
-    }
-}

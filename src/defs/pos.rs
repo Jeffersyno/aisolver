@@ -14,8 +14,8 @@ impl Pos {
         Pos { row: row, col: col }
     }
 
-    pub fn manhattan(p:Pos, q:Pos) -> i8 {
-        i8::abs(p.row - q.row) + i8::abs(p.col - q.col)
+    pub fn manhattan(self) -> i8 {
+        i8::abs(self.row) + i8::abs(self.col)
     }
 }
 
@@ -81,5 +81,5 @@ mod test {
     fn sub_assign() { let mut p = Pos::new(3, 5); p -= Pos::new(1, -2); assert_eq!(Pos::new(2, 7), p); }
 
     #[test]
-    fn manhattan() { assert_eq!(Pos::manhattan(Pos::new(3,3), Pos::new(2,1)), 3); }
+    fn manhattan() { assert_eq!((Pos::new(3,3) - Pos::new(2,1)).manhattan(), 3); }
 }

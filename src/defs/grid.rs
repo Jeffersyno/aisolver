@@ -56,7 +56,7 @@ impl <I, T> Index<(I,I)> for Grid<T> where I: Into<usize> {
         let row = Into::<usize>::into(tuple.0);
         let col = Into::<usize>::into(tuple.1);
 
-        if col >= self.cols { panic!("grid index out of bounds"); }
+        if col >= self.cols { panic!("grid index {}×{} out of bounds", row, col); }
 
         let index = row * self.cols + col;
         &self.data[index]

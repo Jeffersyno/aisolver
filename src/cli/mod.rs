@@ -63,6 +63,15 @@ impl Cli {
                             }
                         }
                     }
+                    "region_cell_weights" | "rcw" => {
+                        match cli.get_component(cmds.pop_front()) {
+                            Err(msg) => println!("{}", msg),
+                            Ok(comp) => {
+                                use analysis::region::Regions;
+                                println!("{}", Regions::cell_weights(comp));
+                            }
+                        }
+                    }
                     "print_level" | "pl" => {
                         if let Some(ref lvl) = cli.level {
                             println!("{}", lvl);
