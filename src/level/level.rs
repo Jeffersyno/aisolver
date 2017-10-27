@@ -39,7 +39,7 @@ impl Level {
                 for item_str in re_comma.split(items) {
                     let idl = item_str.to_lowercase().as_bytes()[0];
                     let idu = item_str.to_uppercase().as_bytes()[0];
-                    let color = Item::find_color(color).expect("invalid color");
+                    let color = Color::find_color_by_str(color).expect("invalid color");
                     color_map.insert(idl, color);
                     color_map.insert(idu, color);
                 }

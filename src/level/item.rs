@@ -1,11 +1,40 @@
 use std::fmt;
 
 use term::Colour as TermColor;
-use super::item::Color as ItemColor;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Color {
     Blue, Red, Green, Cyan, Magenta, Orange, Pink, Yellow
+}
+
+impl Color {
+    pub fn find_color_by_str(name: &str) -> Option<Color> {
+        let name_lower = name.to_lowercase();
+        match name_lower.as_str() {
+            "blue"    => Some(Color::Blue),
+            "red"     => Some(Color::Red),
+            "green"   => Some(Color::Green),
+            "cyan"    => Some(Color::Cyan),
+            "magenta" => Some(Color::Magenta),
+            "orange"  => Some(Color::Orange),
+            "pink"    => Some(Color::Pink),
+            "yellow"  => Some(Color::Yellow),
+                    _ => None
+        }
+    }
+
+    pub fn to_term_color(self) -> TermColor {
+        match self {
+            Color::Blue    => TermColor::Fixed(21),
+            Color::Red     => TermColor::Fixed(196),
+            Color::Green   => TermColor::Fixed(34),
+            Color::Cyan    => TermColor::Fixed(44),
+            Color::Magenta => TermColor::Fixed(55),
+            Color::Orange  => TermColor::Fixed(202),
+            Color::Pink    => TermColor::Fixed(199),
+            Color::Yellow  => TermColor::Fixed(226)
+        }
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -23,6 +52,7 @@ pub struct Item {
 const EMPTY_ITEM: Item = Item { kind: Kind::Empty, id: 0, color: Color::Blue };
 const WALL_ITEM: Item = Item { kind: Kind::Wall, id: 0, color: Color::Blue };
 
+#[allow(dead_code)]
 impl Item {
     pub fn empty() -> Item { EMPTY_ITEM }
     pub fn wall() -> Item { WALL_ITEM }
@@ -50,41 +80,13 @@ impl Item {
         else if i.is_agent() || j.is_agent() { i.color == j.color }
         else { i.color == j.color && i.id == j.id }
     }
-
-    pub fn find_color(name: &str) -> Option<Color> {
-        let name_lower = name.to_lowercase();
-        match name_lower.as_str() {
-            "blue"    => Some(Color::Blue),
-            "red"     => Some(Color::Red),
-            "green"   => Some(Color::Green),
-            "cyan"    => Some(Color::Cyan),
-            "magenta" => Some(Color::Magenta),
-            "orange"  => Some(Color::Orange),
-            "pink"    => Some(Color::Pink),
-            "yellow"  => Some(Color::Yellow),
-                    _ => None
-        }
-    }
-}
-
-fn map_item_color(c: ItemColor) -> TermColor {
-    match c {
-        ItemColor::Blue    => TermColor::Fixed(21),
-        ItemColor::Red     => TermColor::Fixed(196),
-        ItemColor::Green   => TermColor::Fixed(34),
-        ItemColor::Cyan    => TermColor::Fixed(44),
-        ItemColor::Magenta => TermColor::Fixed(55),
-        ItemColor::Orange  => TermColor::Fixed(202),
-        ItemColor::Pink    => TermColor::Fixed(199),
-        ItemColor::Yellow  => TermColor::Fixed(226)
-    }
 }
 
 impl fmt::Display for Item {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         use term::Style;
 
-        let st0 = map_item_color(self.color).normal();
+        let st0 = self.color.to_term_color().normal();
 
         let (st, str) = match self.kind {
             Kind::Empty => (Style::default(), format!(" ")),
