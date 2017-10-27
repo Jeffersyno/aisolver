@@ -54,24 +54,24 @@ impl Cli {
                             Err(msg) => println!("{}", msg)
                         }
                     }
-                    "regions" | "r" => {
-                        match cli.get_component(cmds.pop_front()) {
-                            Err(msg) => println!("{}", msg),
-                            Ok(comp) => {
-                                use analysis::region::Regions;
-                                println!("{}", Regions::new(comp));
-                            }
-                        }
-                    }
-                    "region_cell_weights" | "rcw" => {
-                        match cli.get_component(cmds.pop_front()) {
-                            Err(msg) => println!("{}", msg),
-                            Ok(comp) => {
-                                use analysis::region::Regions;
-                                println!("{}", Regions::cell_weights(comp));
-                            }
-                        }
-                    }
+                    //"regions" | "r" => {
+                    //    match cli.get_component(cmds.pop_front()) {
+                    //        Err(msg) => println!("{}", msg),
+                    //        Ok(comp) => {
+                    //            use analysis::region::Regions;
+                    //            println!("{}", Regions::new(comp));
+                    //        }
+                    //    }
+                    //}
+                    //"region_cell_weights" | "rcw" => {
+                    //    match cli.get_component(cmds.pop_front()) {
+                    //        Err(msg) => println!("{}", msg),
+                    //        Ok(comp) => {
+                    //            use analysis::region::Regions;
+                    //            println!("{}", Regions::cell_weights(comp));
+                    //        }
+                    //    }
+                    //}
                     "print_level" | "pl" => {
                         if let Some(ref lvl) = cli.level {
                             println!("{}", lvl);
@@ -84,7 +84,7 @@ impl Cli {
                         println!("Available commands:");
                         println!(" - level <path>");
                         println!(" - component <number>");
-                        println!(" - regions <number>");
+                        //println!(" - regions <number>");
                         println!(" - print_level");
                         println!(" - exit / quit");
                         println!(" - help");
