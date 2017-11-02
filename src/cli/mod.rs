@@ -50,7 +50,9 @@ impl Cli {
                     }
                     "component" | "c" => {
                         match cli.get_component(cmds.pop_front()) {
-                            Ok(comp) => println!("{}", comp),
+                            Ok(comp) => {
+                                println!("{}", comp);
+                            }
                             Err(msg) => println!("{}", msg)
                         }
                     }
@@ -61,6 +63,19 @@ impl Cli {
                             println!("No level loaded.");
                         }
                     }
+                    "regions" => {
+                        match cli.get_component(cmds.pop_front()) {
+                            Ok(comp) => {
+                                if let Some(nb_regions) = cmds.pop_front().and_then(|s| s.parse::<usize>().ok()) {
+                                    let r = ::level::region::Regions::new(&comp, nb_regions);
+                                    println!("{}", r);
+                                } else {
+                                    println!("Missing number of regions");
+                                }
+                            }
+                            Err(msg) => println!("{}", msg)
+                        }
+                    }
                     "exit" | "quit" => { break; }
                     "help" => {
                         println!("Available commands:");
@@ -68,6 +83,7 @@ impl Cli {
                         println!(" - component <number>");
                         println!(" - print_level");
                         println!(" - exit / quit");
+                        println!(" - regions <component_number> <nb_regions>");
                         println!(" - help");
                     }
                     _ => { println!("Unknown command '{}'", cmd); }
@@ -89,5 +105,4 @@ impl Cli {
             Err("Invalid component number")
         }
     }
-
 }

@@ -5,7 +5,7 @@ use super::pos::Pos;
 
 #[derive(Debug)]
 pub struct Grid<T> {
-    cols: usize,
+    rows: usize,
     data: Vec<T>
 }
 
@@ -25,7 +25,7 @@ impl <T> Grid<T> {
         for _ in 0..cap { data.push(f()); }
 
         Grid {
-            cols: cols,
+            rows: rows,
             data: data
         }
     }
@@ -34,12 +34,30 @@ impl <T> Grid<T> {
     pub fn iter_mut<'a>(&'a mut self) -> IterMut<'a, T> { self.data.iter_mut() }
 
     pub fn size(&self) -> (usize, usize) {
-        let rows = self.data.len() / self.cols;
-        (rows, self.cols)
+        let cols = self.data.len() / self.rows;
+        (self.rows, cols)
     }
 
     pub fn fill(&mut self, val: T) where T: Copy {
         for i in self.iter_mut() { *i = val; }
+    }
+
+    pub fn linear_index_of_pos(&self, pos: Pos) -> usize {
+        self.linear_index_of(pos.row as usize, pos.col as usize)
+    }
+
+    pub fn linear_index_of<I>(&self, row: I, col: I) -> usize where I: Into<usize> {
+        let row = Into::<usize>::into(row);
+        let col = Into::<usize>::into(col);
+
+        let size = self.size();
+
+        if row >= size.0 { panic!("grid row out of bounds"); }
+        if col >= size.1 { panic!("grid col out of bounds"); }
+
+        let index = row + self.rows * col;
+
+        index
     }
 }
 
@@ -53,12 +71,7 @@ impl <T> Index<Pos> for Grid<T> {
 impl <I, T> Index<(I,I)> for Grid<T> where I: Into<usize> {
     type Output = T;
     fn index(&self, tuple: (I, I)) -> &T {
-        let row = Into::<usize>::into(tuple.0);
-        let col = Into::<usize>::into(tuple.1);
-
-        if col >= self.cols { panic!("grid index {}×{} out of bounds", row, col); }
-
-        let index = row * self.cols + col;
+        let index = self.linear_index_of(tuple.0, tuple.1);
         &self.data[index]
     }
 }
@@ -71,12 +84,7 @@ impl <T> IndexMut<Pos> for Grid<T> {
 
 impl <I, T> IndexMut<(I,I)> for Grid<T> where I: Into<usize> {
     fn index_mut(&mut self, tuple: (I, I)) -> &mut T {
-        let row = Into::<usize>::into(tuple.0);
-        let col = Into::<usize>::into(tuple.1);
-
-        if col > self.cols { panic!("grid index out of bounds"); }
-
-        let index = row * self.cols + col;
+        let index = self.linear_index_of(tuple.0, tuple.1);
         &mut self.data[index]
     }
 }
@@ -84,7 +92,7 @@ impl <I, T> IndexMut<(I,I)> for Grid<T> where I: Into<usize> {
 impl <T: Clone> Clone for Grid<T> {
     fn clone(&self) -> Grid<T> {
         Grid {
-            cols: self.cols,
+            rows: self.rows,
             data: self.data.clone()
         }
     }
