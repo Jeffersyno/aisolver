@@ -24,8 +24,8 @@ impl Cli {
             if cmds.is_empty() {
                 match rl.readline("> ") {
                     Ok(line) => {
-                        rl.add_history_entry(&line);
                         for cmd in re_split.split(&line) { cmds.push_back(cmd.to_string()); }
+                        rl.add_history_entry(line);
                     },
                     Err(_) => { break; }
                 }
